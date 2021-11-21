@@ -14,8 +14,9 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+I am a senior computer engineering student at Bogazici University. My research interests are machine learning and computer vision. In detail, I work on latent space manipulation in GANs, which could be used for various tasks such as face editing, generating the desired image, image restoration, and improving the quality of a low-resolution image.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+I am very interested in the concepts of intelligence, learning, and memory. Most living beings do amazing things all the time without being aware of how complex their behaviors are. Their brains have evolved with the environment and other brains throughout millions of years. Now, we look at one of these products produced by this process, the human brain, and it is nearly impossible to understand how it works. However, trying to imitate how the brain perceives its environment via computers is one of the things we could do, and we are very good at it. Becoming a part of this process makes me very excited.
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](http://fortawesome.github.io/Font-Awesome/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+
+You could see [CV here](https://github.com/alshedivat/al-folio/files/7576315/umut_cv.pdf).
