@@ -1,6 +1,54 @@
 ---
 ---
 
+@article{fantasticstyles,
+  abbr={WACV},
+  title={Fantastic Style Channels and Where to Find Them: A Submodular Framework for Discovering Diverse Directions in GANs},
+  author={Enis Simsar and Umut Kocasari and Ezgi Gulperi Er and Pinar Yanardag},
+  abstract={The discovery of interpretable directions in the latent spaces of pre-trained GAN models has recently become a popular topic. In particular, StyleGAN2 has enabled various image generation and manipulation tasks due to its rich and disentangled latent spaces. The discovery of such directions is typically done either in a supervised manner, which requires annotated data for each desired manipulation, or in an unsupervised manner, which requires a manual effort to identify the directions. As a result, existing work typically finds only a handful of directions in which controllable edits can be made. In this paper, we attempt to find the most representative and diverse subset of directions in stylespace of StyleGAN2. We formulate the problem as a coverage of stylespace and propose a novel submodular optimization framework that can be solved efficiently with a greedy optimization scheme. We evaluate our framework with qualitative and quantitative experiments and show that our method finds more diverse and relevant channels.},
+  booktitle={Winter Conference on Applications of Computer Vision (WACV)},
+  journal={Winter Conference on Applications of Computer Vision},
+  pages={1365--1374},
+  year={2023},
+  month={March},
+  teaser={teaser_fantastic.jpeg},
+  pdf={https://arxiv.org/abs/2203.08516},
+  website={https://catlab-team.github.io/fantasticstyles},
+  selected={true}
+}
+
+@article{paintinstyle,
+  abbr={CVPR Workshop},
+  title={PaintInStyle: One-Shot Discovery of Interpretable Directions by Painting},
+  author={Berkay Doner* and Elif Sema Balcioglu* and Merve Rabia Barin* and Umut Kocasari and Mert Tiftikci and Pinar Yanardag},
+  abstract={The search for interpretable directions in latent spaces of pre-trained Generative Adversarial Networks (GANs) has become a topic of interest. These directions can be utilized to perform semantic manipulations on the GAN generated images. The discovery of such directions is performed either in a supervised way, which requires manual annotation or pre-trained classifiers, or in an unsupervised way, which requires the user to interpret what these directions represent. Our goal in this work is to find meaningful latent space directions that can be used to manipulate images in a one-shot manner where the user provides a simple drawing (such as drawing a beard or painting a red lipstick) using basic image editing tools. Our method then finds a direction that can be applied to any latent vector to perform the desired edit. We demonstrate that our method is able to find several distinct and fine-grained directions in a variety of datasets.},
+  booktitle={Conference on Computer Vision and Pattern Recognition (CVPR)},
+  journal={Conference on Computer Vision and Pattern Recognition},
+  pages={1365--1374},
+  year={2022},
+  month={January},
+  teaser={teaser_paintinstyle.png},
+  website={https://catlab-team.github.io/paintinstyle},
+  preprint={true},
+  selected={true}
+}
+
+@article{rankinstyle,
+  abbr={CVPR Workshop},
+  title={Rank in Style: A Ranking-based Approach to Find Interpretable Directions},
+  author={Umut Kocasari and Kerem Zaman and Mert Tiftikci and Enis Simsar and Pinar Yanardag},
+  abstract={Recent work such as StyleCLIP aims to harness the power of CLIP embeddings for controlled manipulations. Although these models are capable of manipulating images based on a text prompt, the success of the manipulation often depends on careful selection of the appropriate text for the desired manipulation. This limitation makes it particularly difficult to perform text-based manipulations in domains where the user lacks expertise, such as fashion. To address this problem, we propose a method for automatically determining the most successful and relevant text-based edits using a pre-trained StyleGAN model. Our approach consists of a novel mechanism that uses CLIP to guide beam-search decoding, and a ranking method that identifies the most relevant and successful edits based on a list of keywords. We also demonstrate the capabilities of our framework in several domains, including fashion.},
+  booktitle={Conference on Computer Vision and Pattern Recognition (CVPR)},
+  journal={Conference on Computer Vision and Pattern Recognition},
+  pages={1365--1374},
+  year={2022},
+  month={January},
+  teaser={teaser_rankinstyle.jpeg},
+  website={https://catlab-team.github.io/rankinstyle},
+  preprint={true},
+  selected={true}
+}
+
 @article{stylemc,
   abbr={WACV},
   title={StyleMC: Multi-Channel Based Fast Text-Guided Image Generation and Manipulation},
