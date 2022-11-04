@@ -21,4 +21,4 @@ I am very interested in the concepts of intelligence, learning, and memory. Most
 These are the reasons why my research interests are machine learning, computer vision, and artificial intelligence, in general. Up to now, I have worked on interpretations of GANs, how they learn the representations of images and how their latent spaces could be manipulated to produce the desired output.
 
 
-You could see [CV here](https://github.com/alshedivat/al-folio/files/7576825/cv.pdf).
+You could see [CV here](https://github.com/alshedivat/al-folio/files/9934095/CV.pdf).
