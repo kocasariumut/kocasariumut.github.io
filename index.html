@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Umut Kocasarı, PhD Student, Technical University of Munich</title>
+  <meta name="description"
+        content="PhD student at the Visual Computing & AI Lab, Technical University of Munich. Feed-forward 4D face reconstruction, 3D vision, and generative modeling.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>
+      <rect width='64' height='64' rx='14' fill='%236366f1'/>
+      <text x='50%' y='54%' text-anchor='middle' fill='white'
+            font-family='Inter,Arial' font-size='30' font-weight='800'
+            dominant-baseline='middle'>UK</text>
+    </svg>">
+</head>
+<body>
+
+  <!-- Drifting gradient blobs that live behind everything -->
+  <div class="bg-mesh" aria-hidden="true">
+    <div class="bg-blob bg-blob-1"></div>
+    <div class="bg-blob bg-blob-2"></div>
+    <div class="bg-blob bg-blob-3"></div>
+  </div>
+
+  <!-- ===== Sticky navigation =============================================== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#top" class="nav-brand">
+        <span class="brand-dot"></span>
+        <span class="brand-text">Umut Kocasarı</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button id="theme-toggle" class="theme-btn" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===== Hero ============================================================ -->
+  <header id="top" class="hero">
+    <!-- Ambient particle network — evokes dense correspondence / point tracking. -->
+    <canvas id="particles" class="hero-particles" aria-hidden="true"></canvas>
+    <!-- Cursor-following spotlight; intensity controlled by --spot-x/y in JS. -->
+    <div class="hero-spotlight" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-eyebrow">PhD Student · <b>Technical University of Munich</b></div>
+      <h1 class="hero-title">
+        Hi, I'm <span class="grad">Umut Kocasarı</span>.
+      </h1>
+      <p class="hero-sub">
+        PhD Student at the
+        <a href="https://www.niessnerlab.org/" class="link"
+           target="_blank" rel="noopener">Visual Computing &amp; AI Lab</a>,
+        <a href="https://www.tum.de/" class="link"
+           target="_blank" rel="noopener"><b>Technical University of Munich</b></a>,
+        advised by
+        <a href="https://www.niessnerlab.org/members/matthias_niessner/profile.html"
+           class="link" target="_blank" rel="noopener">Prof. Matthias&nbsp;Nießner</a>.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#publications">See publications</a>
+        <a class="btn btn-ghost" href="mailto:umut.denizli@hotmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               width="16" height="16"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg>
+          Get in touch
+        </a>
+      </div>
+    </div>
+
+    <!-- Stylized 3D face mesh — directly thematic to FaceAnything: an oval
+         head with latitude/longitude contours and pulsing landmark points.   -->
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 400 400" class="face-mesh">
+        <g stroke="currentColor" fill="none" stroke-linecap="round">
+          <ellipse cx="200" cy="200" rx="115" ry="155"
+                   stroke-width="0.9" opacity="0.75"/>
+          <ellipse cx="200" cy="80"  rx="60"  ry="8"  stroke-width="0.5" opacity="0.40"/>
+          <ellipse cx="200" cy="115" rx="92"  ry="10" stroke-width="0.5" opacity="0.50"/>
+          <ellipse cx="200" cy="155" rx="108" ry="12" stroke-width="0.5" opacity="0.55"/>
+          <ellipse cx="200" cy="200" rx="115" ry="14" stroke-width="0.5" opacity="0.60"/>
+          <ellipse cx="200" cy="245" rx="112" ry="13" stroke-width="0.5" opacity="0.55"/>
+          <ellipse cx="200" cy="290" rx="98"  ry="11" stroke-width="0.5" opacity="0.50"/>
+          <ellipse cx="200" cy="325" rx="68"  ry="8"  stroke-width="0.5" opacity="0.40"/>
+          <path d="M 200 45 Q 130 100 130 200 Q 130 300 200 355" stroke-width="0.5" opacity="0.50"/>
+          <path d="M 200 45 Q 270 100 270 200 Q 270 300 200 355" stroke-width="0.5" opacity="0.50"/>
+          <path d="M 200 45 Q 105 100 105 200 Q 105 300 200 355" stroke-width="0.5" opacity="0.30"/>
+          <path d="M 200 45 Q 295 100 295 200 Q 295 300 200 355" stroke-width="0.5" opacity="0.30"/>
+          <path d="M 200 45 L 200 355" stroke-width="0.5" opacity="0.45"/>
+          <ellipse cx="160" cy="180" rx="18" ry="9" stroke-width="0.7" opacity="0.75"/>
+          <ellipse cx="240" cy="180" rx="18" ry="9" stroke-width="0.7" opacity="0.75"/>
+          <path d="M 200 178 Q 196 215 200 240" stroke-width="0.7" opacity="0.65"/>
+          <path d="M 175 272 Q 200 287 225 272" stroke-width="0.7" opacity="0.75"/>
+        </g>
+        <g class="landmarks" fill="currentColor">
+          <circle cx="160" cy="180" r="3"/>
+          <circle cx="240" cy="180" r="3"/>
+          <circle cx="200" cy="225" r="3"/>
+          <circle cx="175" cy="272" r="3"/>
+          <circle cx="225" cy="272" r="3"/>
+          <circle cx="200" cy="332" r="3"/>
+          <circle cx="155" cy="240" r="2.5"/>
+          <circle cx="245" cy="240" r="2.5"/>
+        </g>
+      </svg>
+    </div>
+
+    <a href="#about" class="scroll-cue" aria-label="Scroll down">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           width="22" height="22"><path d="M6 9l6 6 6-6"/></svg>
+    </a>
+  </header>
+
+  <!-- ===== About =========================================================== -->
+  <section id="about" class="section reveal">
+    <div class="section-inner two-col">
+      <div class="col-text">
+        <div class="section-eyebrow">About</div>
+        <h2>A short version.</h2>
+        <p>
+          I research feed-forward neural systems for 3D, currently focused on
+          <b>4D face reconstruction</b> and dense tracking from uncalibrated
+          image sequences. The goal is to amortize 3D understanding into a
+          single forward pass: fast, generalizable, and free of per-scene
+          optimization.
+        </p>
+        <p>
+          Earlier, I worked on <b>generative modeling</b> and
+          <b>latent-space manipulation in GANs</b>, discovering interpretable
+          directions, text-driven editing, and structured ways to control image
+          generation.
+        </p>
+        <p>
+          Before joining the Visual Computing &amp; AI Lab, I completed my
+          Bachelor's in Computer Engineering at <b>Boğaziçi University</b>
+          and my Master's in Informatics at the
+          <b>Technical University of Munich</b>.
+        </p>
+
+        <ul class="chips">
+          <li>4D Face Reconstruction</li>
+          <li>Feed-forward 3D</li>
+          <li>Neural Rendering</li>
+          <li>Generative Modeling</li>
+        </ul>
+      </div>
+
+      <aside class="col-aside">
+        <div class="profile-card">
+          <div class="avatar avatar-photo">
+            <img src="assets/profile.png" alt="Umut Kocasarı">
+          </div>
+          <div class="profile-name">Umut Kocasarı</div>
+          <div class="profile-role">PhD Student · <b>Technical University of Munich</b></div>
+          <div class="profile-links">
+            <a href="https://scholar.google.com/citations?user=uRN-Q_sAAAAJ"
+               target="_blank" rel="noopener" aria-label="Google Scholar" title="Google Scholar">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M5.242 13.769L0.5 9.5 12 1l11.5 8.5-4.742 4.269A7.5 7.5 0 0 0 4.5 14a7.6 7.6 0 0 0 .742-0.231z"/>
+                <circle cx="12" cy="14.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </a>
+            <a href="https://github.com/kocasariumut"
+               target="_blank" rel="noopener" aria-label="GitHub" title="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56 0-.27-.01-1-.02-1.96-3.2.69-3.87-1.54-3.87-1.54-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.59.23 2.76.11 3.05.74.8 1.18 1.82 1.18 3.08 0 4.42-2.69 5.4-5.25 5.68.41.36.78 1.06.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.67.8.55C20.21 21.39 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/umut-kocasari"
+               target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M19 0H5C2.24 0 0 2.24 0 5v14c0 2.76 2.24 5 5 5h14c2.76 0 5-2.24 5-5V5c0-2.76-2.24-5-5-5zM8 19H5V8h3v11zM6.5 6.7c-.97 0-1.75-.78-1.75-1.75S5.53 3.2 6.5 3.2s1.75.78 1.75 1.75S7.47 6.7 6.5 6.7zM20 19h-3v-5.6c0-1.36-.5-2.3-1.7-2.3-.93 0-1.49.62-1.74 1.22-.09.21-.11.51-.11.81V19h-3V8h3v1.3c.4-.62 1.12-1.5 2.74-1.5 2 0 3.51 1.3 3.51 4.1V19z"/>
+              </svg>
+            </a>
+            <a href="mailto:umut.denizli@hotmail.com" aria-label="Email" title="Email">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                   stroke-width="2" width="18" height="18">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="M3 7l9 6 9-6"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== Research interests ============================================== -->
+  <section id="research" class="section reveal">
+    <div class="section-inner">
+      <div class="section-eyebrow">Research</div>
+      <h2>What I'm working on.</h2>
+      <p class="section-lead">
+        The threads I've worked on, past and present.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <ellipse cx="12" cy="12" rx="6" ry="9"/>
+              <ellipse cx="12" cy="9" rx="6" ry="2"/>
+              <ellipse cx="12" cy="15" rx="6" ry="2"/>
+              <circle cx="9.5"  cy="11" r=".7" fill="currentColor"/>
+              <circle cx="14.5" cy="11" r=".7" fill="currentColor"/>
+            </svg>
+          </div>
+          <h3>4D Face Reconstruction</h3>
+          <p>
+            Recovering temporally consistent face geometry and dense
+            point-correspondences from in-the-wild image sequences. The focus
+            of <i>Face Anything</i>.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M3 7l9-4 9 4-9 4-9-4z"/>
+              <path d="M3 12l9 4 9-4"/>
+              <path d="M3 17l9 4 9-4"/>
+            </svg>
+          </div>
+          <h3>Feed-forward 3D</h3>
+          <p>
+            Networks that predict 3D representations (meshes, point clouds,
+            Gaussians, neural fields) directly from images, with no per-scene
+            optimization. Generalization is the goal, speed is the bonus.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+            </svg>
+          </div>
+          <h3>Generative Modeling</h3>
+          <p>
+            Earlier work on text-driven image generation and interpretable
+            directions in GAN latent spaces, bridging editability with
+            structured representations.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Publications ==================================================== -->
+  <section id="publications" class="section reveal">
+    <div class="section-inner">
+      <div class="section-eyebrow">Selected work</div>
+      <h2>Publications.</h2>
+      <p class="section-lead">
+        Selected papers below; see
+        <a href="https://scholar.google.com/citations?user=uRN-Q_sAAAAJ"
+           class="link" target="_blank" rel="noopener">Google Scholar</a>
+        for the complete list.
+      </p>
+
+      <ol class="pubs">
+
+        <!-- ============== FaceAnything (FEATURED) ====================== -->
+        <li class="pub pub-featured">
+          <div class="pub-thumb">
+            <video src="assets/faceanything_teaser.mp4"
+                   autoplay muted loop playsinline preload="metadata"></video>
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="badge-featured">★ Latest</span>
+              <span class="venue">arXiv 2026</span>
+              <span class="dot">·</span>
+              <span class="status status-submission">Preprint</span>
+            </div>
+            <h3 class="pub-title">
+              Face Anything: 4D Face Reconstruction from Any Image Sequence
+            </h3>
+            <div class="pub-authors">
+              <b>Umut Kocasarı</b>,
+              <a href="https://simongiebenhain.github.io/" class="link"
+                 target="_blank" rel="noopener">Simon Giebenhain</a>,
+              <a href="https://scholar.google.com/citations?user=9qqtzK4AAAAJ&hl=en"
+                 class="link" target="_blank" rel="noopener">Richard Shaw</a>,
+              <a href="https://www.niessnerlab.org/members/matthias_niessner/profile.html"
+                 class="link" target="_blank" rel="noopener">Matthias Nießner</a>
+            </div>
+            <p class="pub-abstract">
+              A transformer-based, single-feed-forward model that jointly
+              predicts depth and canonical facial coordinates, enabling
+              temporally consistent 4D reconstruction <i>and</i> dense tracking
+              of arbitrary image sequences without per-frame optimization. The
+              canonical-coordinate representation reframes tracking as a
+              coordinate-prediction problem, so dense correspondences fall out
+              from a single nearest-neighbor lookup in canonical space. The
+              method achieves ~3× lower correspondence error than prior dynamic
+              reconstruction methods (V-DPM, Pixel3DMM) and 16% better depth
+              than face-specific baselines (DAViD, Sapiens) on NeRSemble and
+              VFHQ.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://kocasariumut.github.io/FaceAnything/"
+                 target="_blank" rel="noopener">Project page</a>
+              <a class="pill" href="https://arxiv.org/abs/2604.19702"
+                 target="_blank" rel="noopener">arXiv</a>
+              <a class="pill" href="https://kocasariumut.github.io/FaceAnything/static/FaceAnything.pdf"
+                 target="_blank" rel="noopener">Paper</a>
+              <a class="pill" href="https://www.youtube.com/watch?v=wSGHpAscp0Y"
+                 target="_blank" rel="noopener">Video</a>
+              <a class="pill" href="https://github.com/SimonGiebenhain/Pix2NPHM"
+                 target="_blank" rel="noopener">Code (soon)</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== G3DST ======================================== -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/g3dst.png" alt="G3DST teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">GCPR 2024</span>
+            </div>
+            <h3 class="pub-title">
+              G3DST: Generalizing 3D Style Transfer with Neural Radiance Fields
+              across Scenes and Styles
+            </h3>
+            <div class="pub-authors">
+              Adil Meric, <b>Umut Kocasarı</b>, Matthias Nießner, Barbara Roessle
+            </div>
+            <p class="pub-abstract">
+              Existing NeRF-based 3D style transfer methods need extensive
+              per-scene or per-style optimization, which limits how broadly
+              they can be applied. G3DST renders stylized novel views from a
+              generalizable NeRF without any test-time fitting, sharing a
+              single learned model across scenes and styles via a hypernetwork.
+              We additionally introduce a flow-based multi-view consistency
+              loss that keeps stylization stable as the camera moves. Visual
+              quality matches per-scene methods while being dramatically faster
+              and more broadly applicable.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://arxiv.org/abs/2408.13508"
+                 target="_blank" rel="noopener">arXiv</a>
+              <a class="pill"
+                 href="https://portal.fis.tum.de/en/publications/g3dst-generalizing-3d-style-transfer-withneural-radiance-fields-a"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== Fantastic Style Channels ===================== -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/fantastic.jpeg" alt="Fantastic Style Channels teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">WACV 2023</span>
+            </div>
+            <h3 class="pub-title">
+              Fantastic Style Channels and Where to Find Them: A Submodular
+              Framework for Discovering Diverse Directions in GANs
+            </h3>
+            <div class="pub-authors">
+              Enis Simsar, <b>Umut Kocasarı</b>, Ezgi Gulperi Er, Pinar Yanardag
+            </div>
+            <p class="pub-abstract">
+              Existing approaches to discovering interpretable editing
+              directions in StyleGAN2 (supervised, unsupervised, or manual)
+              typically surface only a handful of usable directions. We design
+              a submodular framework that selects the most representative and
+              diverse subset of directions inside StyleGAN2's channel-wise
+              style space, clustering channels that perform similar
+              manipulations into groups. Diversity is encoded directly through
+              cluster structure and the whole problem is solved efficiently
+              with a greedy scheme. Quantitative and qualitative experiments
+              show the method finds more diverse and disentangled directions
+              than prior work.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://arxiv.org/abs/2203.08516"
+                 target="_blank" rel="noopener">arXiv</a>
+              <a class="pill" href="https://catlab-team.github.io/fantasticstyles"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== StyleMC ======================================= -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/stylemc.png" alt="StyleMC teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">WACV 2022</span>
+            </div>
+            <h3 class="pub-title">
+              StyleMC: Multi-Channel Based Fast Text-Guided Image Generation
+              and Manipulation
+            </h3>
+            <div class="pub-authors">
+              <b>Umut Kocasarı</b>, Alara Dirik, Mert Tiftikci, Pinar Yanardag
+            </div>
+            <p class="pub-abstract">
+              Discovering meaningful directions in GAN latent spaces usually
+              requires either large labeled datasets or hours of preprocessing
+              per manipulation. StyleMC is a fast text-driven image manipulation
+              method that combines a CLIP-based loss with an identity-preservation
+              loss to find stable global directions in StyleGAN2, taking only
+              a few seconds of training per text prompt. There is no need for
+              prompt engineering or per-prompt tuning, and the approach drops
+              into any pretrained StyleGAN2 model. We outperform slower
+              CLIP-based baselines while leaving non-target attributes intact.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://arxiv.org/abs/2112.08493"
+                 target="_blank" rel="noopener">arXiv</a>
+              <a class="pill" href="https://github.com/catlab-team/stylemc"
+                 target="_blank" rel="noopener">Code</a>
+              <a class="pill" href="https://catlab-team.github.io/stylemc/"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== Rank in Style ================================= -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/rankinstyle.jpeg" alt="Rank in Style teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">CVPR-W 2022</span>
+            </div>
+            <h3 class="pub-title">
+              Rank in Style: A Ranking-based Approach to Find Interpretable
+              Directions
+            </h3>
+            <div class="pub-authors">
+              <b>Umut Kocasarı</b>, Kerem Zaman, Mert Tiftikci, Enis Simsar,
+              Pinar Yanardag
+            </div>
+            <p class="pub-abstract">
+              Recent CLIP-based StyleGAN editing methods such as StyleCLIP work
+              well, but their success often hinges on careful manual prompt
+              engineering. We propose an automatic ranking-based approach that
+              scores candidate text-driven directions by combining two metrics:
+              relevance (CLIP-space similarity to a target keyword) and
+              editability (the magnitude of induced change). Given a pretrained
+              StyleGAN model and a list of keywords, the framework outputs
+              optimized prompts that reliably produce semantic edits without
+              hand-tuning. Human evaluation finds it more semantically
+              meaningful and disentangled than unsupervised baselines like
+              SeFa and GANSpace.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://catlab-team.github.io/rankinstyle"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== PaintInStyle =================================== -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/paintinstyle.png" alt="PaintInStyle teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">CVPR-W 2022</span>
+            </div>
+            <h3 class="pub-title">
+              PaintInStyle: One-Shot Discovery of Interpretable Directions by
+              Painting
+            </h3>
+            <div class="pub-authors">
+              Berkay Doner, Elif Sema Balcioglu, Merve Rabia Barin,
+              <b>Umut Kocasarı</b>, Mert Tiftikci, Pinar Yanardag
+            </div>
+            <p class="pub-abstract">
+              Most methods for discovering interpretable directions in GAN
+              latent spaces require many labeled samples, classifiers, or
+              careful annotation. PaintInStyle finds a reusable manipulation
+              direction from a single painted edit, for example sketching a
+              beard or painting red lipstick on one image. The method inverts
+              both the original and edited image, isolates channels that affect
+              only the painted region using segmentation, and averages across
+              random samples to reduce noise. The result is a one-shot,
+              annotation-free pipeline for directions that generalize to any
+              image.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://catlab-team.github.io/paintinstyle"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+        <!-- ============== Crowd-sourced Creativity ====================== -->
+        <li class="pub">
+          <div class="pub-thumb">
+            <img src="assets/creativegan.png" alt="Crowd-sourced Creativity teaser" loading="lazy">
+          </div>
+          <div class="pub-body">
+            <div class="pub-meta">
+              <span class="venue">NeurIPS-W 2021</span>
+            </div>
+            <h3 class="pub-title">
+              Exploring Latent Dimensions of Crowd-sourced Creativity
+            </h3>
+            <div class="pub-authors">
+              <b>Umut Kocasarı</b>, Alperen Bag, Efehan Atici, Pinar Yanardag
+            </div>
+            <p class="pub-abstract">
+              Most prior work on interpretable GAN directions targets concrete
+              semantic attributes (age, gender, expression, and so on). We
+              instead study a more abstract property: <i>creativity</i>. Can
+              an image be steered to look more or less creative? Building on
+              Artbreeder, the largest crowd-sourced AI image platform, we
+              explore the latent dimensions of images generated there and
+              present a framework for manipulating creativity as a direction
+              in latent space.
+            </p>
+            <div class="pub-links">
+              <a class="pill" href="https://arxiv.org/abs/2112.06978"
+                 target="_blank" rel="noopener">arXiv</a>
+              <a class="pill" href="https://github.com/catlab-team/latentcreative"
+                 target="_blank" rel="noopener">Code</a>
+              <a class="pill" href="https://catlab-team.github.io/latentcreative/"
+                 target="_blank" rel="noopener">Project</a>
+            </div>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Contact ========================================================= -->
+  <section id="contact" class="section reveal">
+    <div class="section-inner contact-inner">
+      <div class="section-eyebrow">Contact</div>
+      <h2>Let's talk.</h2>
+      <p class="section-lead">
+        Always happy to chat about feed-forward 3D, collaborations, or
+        internships. Email is the fastest way.
+      </p>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:umut.denizli@hotmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               width="16" height="16"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Send me an email
+        </a>
+        <a class="btn btn-ghost"
+           href="https://github.com/user-attachments/files/23826460/umut_cv_latest.pdf"
+           target="_blank" rel="noopener">CV (PDF)</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>© <span id="year"></span> Umut Kocasarı</div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
