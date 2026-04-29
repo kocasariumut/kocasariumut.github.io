@@ -2,6 +2,10 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
 // ----- scroll reveal -------------------------------------------------------
+// Use threshold:0 (any visible pixel triggers) instead of a percentage.
+// A percentage threshold breaks for tall sections — e.g. at 150% browser
+// zoom, the Publications section is taller than 8× the viewport, so a
+// 0.12 threshold can never be satisfied and the section stays hidden.
 const revealObserver = new IntersectionObserver(
   (entries) => {
     for (const entry of entries) {
@@ -11,7 +15,7 @@ const revealObserver = new IntersectionObserver(
       }
     }
   },
-  { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+  { threshold: 0, rootMargin: "0px 0px -80px 0px" }
 );
 document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
 
